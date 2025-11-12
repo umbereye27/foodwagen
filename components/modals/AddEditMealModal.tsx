@@ -1,9 +1,12 @@
-// src/components/modals/AddEditMealModal.tsx
-import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { foodSchema, FoodFormSchema } from '../../lib/validators';
-import { Food } from '../../lib/types/food';
+"use client";
+
+import { useEffect } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { foodSchema, FoodFormSchema } from "../../lib/validators";
+import { Food } from "../../lib/types/food";
+import { CustomInput } from "../custom-input";
+import { FormField } from "../ui/form";
 
 type Props = {
   open: boolean;
@@ -13,84 +16,187 @@ type Props = {
   isSubmitting?: boolean;
 };
 
-export default function AddEditMealModal({ open, initialValues, onClose, onSubmit, isSubmitting }: Props) {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<FoodFormSchema>({
+export default function AddEditMealModal({
+  open,
+  initialValues,
+  onClose,
+  onSubmit,
+  isSubmitting = false,
+}: Props) {
+  const form = useForm<FoodFormSchema>({
     resolver: zodResolver(foodSchema),
     defaultValues: {
-      food_name: initialValues?.name ?? '',
+      food_name: initialValues?.name ?? "",
       food_rating: (initialValues?.rating ?? 3) as number,
-      food_image: initialValues?.image ?? '',
-      restaurant_name: initialValues?.restaurant?.name ?? '',
-      restaurant_logo: initialValues?.restaurant?.logo ?? '',
-      restaurant_status: (initialValues?.restaurant?.status as any) ?? 'Open'
-    }
+      food_image: initialValues?.image ?? "",
+      restaurant_name: initialValues?.restaurant?.name ?? "",
+      restaurant_logo: initialValues?.restaurant?.logo ?? "",
+      restaurant_status: (initialValues?.restaurant?.status as any) ?? "Open",
+    },
   });
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = form;
 
   useEffect(() => {
     reset({
-      food_name: initialValues?.name ?? '',
+      food_name: initialValues?.name ?? "",
       food_rating: (initialValues?.rating ?? 3) as number,
-      food_image: initialValues?.image ?? '',
-      restaurant_name: initialValues?.restaurant?.name ?? '',
-      restaurant_logo: initialValues?.restaurant?.logo ?? '',
-      restaurant_status: (initialValues?.restaurant?.status as any) ?? 'Open  '
+      food_image: initialValues?.image ?? "",
+      restaurant_name: initialValues?.restaurant?.name ?? "",
+      restaurant_logo: initialValues?.restaurant?.logo ?? "",
+      restaurant_status: (initialValues?.restaurant?.status as any) ?? "Open",
     });
   }, [initialValues, reset, open]);
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="bg-white rounded-lg p-6 z-10 w-full max-w-md">
-        <h2 className="text-lg font-semibold mb-4">{initialValues ? 'Edit Meal' : 'Add Meal'}</h2>
-        <form onSubmit={handleSubmit(onSubmit as any)}>
-          <label className="block">
-            <span className="text-sm">Food name</span>
-            <input {...register('food_name')} className="food-input mt-1 block w-full" placeholder="Enter food name" aria-describedby="food-name-error" />
-            {errors.food_name && <p id="food-name-error" className="text-sm text-red-600">{errors.food_name.message}</p>}
-          </label>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto ">
+      <div className="absolute inset-0 bg-white/40" onClick={onClose} />
+      <div className="bg-white rounded-lg p-10 mt-15 z-10 w-full max-w-xl">
+        <h2 className=" mb-4 flex justify-center">
+          {initialValues ? "Edit Meal" : "Add Meal"}
+        </h2>
+        <FormProvider {...form}>
+          <form onSubmit={handleSubmit(onSubmit as any)} className="space-y-3">
+            <FormField
+              control={control}
+              name="food_name"
+              render={({ field }) => (
+                <div>
+                  <CustomInput label="Food Name*" type="text" {...field} 
+                  placeholder="Enter food name"/>
+                  {errors.food_name && (
+                    <p className="text-sm text-yellow-600 mt-1"></p>
+                  )}
+                </div>
+              )}
+            />
 
-          <label className="block mt-3">
-            <span className="text-sm">Rating</span>
-            <input type="number" {...register('food_rating', { valueAsNumber: true })} className="food-input mt-1 block w-full" placeholder="Food rating (1-5)" aria-describedby="food-rating-error" />
-            {errors.food_rating && <p id="food-rating-error" className="text-sm text-red-600">{errors.food_rating.message as any}</p>}
-          </label>
+            <FormField
+              control={control}
+              name="food_rating"
+              render={({ field }) => (
+                <div>
+                  <CustomInput
+                  placeholder="Food Rating"
+                    label="Rating"
+                    type="number"
+                    {...field}
+                    onChange={(e: any) =>
+                      field.onChange(Number(e?.target?.value ?? e))
+                    }
+                    min={1}
+                    max={5}
+                  />
+                  {errors.food_rating && (
+                    <p className="text-sm text-red-600 mt-1"></p>
+                  )}
+                </div>
+              )}
+            />
 
-          <label className="block mt-3">
-            <span className="text-sm">Image URL</span>
-            <input {...register('food_image')} className="food-input mt-1 block w-full" placeholder="Enter food image url" aria-describedby="food-image-error" />
-            {errors.food_image && <p id="food-image-error" className="text-sm text-red-600">{errors.food_image.message}</p>}
-          </label>
+            <FormField
+              control={control}
+              name="food_image"
+              render={({ field }) => (
+                <div>
+                  <CustomInput label="Image URL" type="text" {...field} placeholder= 'Foood Image (link)'/>
+                  {errors.food_image && (
+                    <p className="text-sm text-red-600 mt-1"></p>
+                  )}
+                </div>
+              )}
+            />
 
-          <label className="block mt-3">
-            <span className="text-sm">Restaurant name</span>
-            <input {...register('restaurant_name')} className="food-input mt-1 block w-full" placeholder="Enter restaurant name" aria-describedby="restaurant-name-error" />
-            {errors.restaurant_name && <p id="restaurant-name-error" className="text-sm text-red-600">{errors.restaurant_name.message}</p>}
-          </label>
+            <FormField
+              control={control}
+              name="restaurant_name"
+              render={({ field }) => (
+                <div>
+                  <CustomInput label="Restaurant Name" type="text" {...field}  placeholder="Restaurant Name"/>
+                  {errors.restaurant_name && (
+                    <p className="text-sm text-red-600 mt-1"></p>
+                  )}
+                </div>
+              )}
+            />
 
-          <label className="block mt-3">
-            <span className="text-sm">Restaurant logo URL</span>
-            <input {...register('restaurant_logo')} className="food-input mt-1 block w-full" placeholder="Enter restaurant logo url" aria-describedby="restaurant-logo-error" />
-            {errors.restaurant_logo && <p id="restaurant-logo-error" className="text-sm text-red-600">{errors.restaurant_logo.message}</p>}
-          </label>
+            <FormField
+              control={control}
+              name="restaurant_logo"
+              render={({ field }) => (
+                <div>
+                  <CustomInput
+                    label="Restaurant Logo URL"
+                    type="text"
+                    {...field}
+                    placeholder="Restaurant Logo(link)"
+                  />
+                  {errors.restaurant_logo && (
+                    <p className="text-sm text-red-600 mt-1"></p>
+                  )}
+                </div>
+              )}
+            />
 
-          <label className="block mt-3">
-            <span className="text-sm">Restaurant Status</span>
-            <select {...register('restaurant_status')} className="food-input mt-1 block w-full" aria-describedby="restaurant-status-error">
-              <option>Open</option>
-              <option>Closed</option>
-            </select>
-            {errors.restaurant_status && <p id="restaurant-status-error" className="text-sm text-red-600">{errors.restaurant_status.message as any}</p>}
-          </label>
+            <FormField
+              control={control}
+              name="restaurant_status"
+              render={({ field }) => (
+                <div>
+                  <label className="block text-sm mb-1">
+                    Restaurant Status
+                  </label>
+                  <select
+                    {...field}
+                    className="food-input mt-1 block w-full"
+                    aria-describedby="restaurant-status-error"
+                  >
+                    <option value="Open">Open</option>
+                    <option value="Closed">Closed</option>
+                  </select>
+                  {errors.restaurant_status && (
+                    <p
+                      id="restaurant-status-error"
+                      className="text-sm text-red-600 mt-1"
+                    >
+                    </p>
+                  )}
+                </div>
+              )}
+            />
 
-          <div className="mt-4 flex items-center justify-end gap-3">
-            <button type="button" onClick={onClose} className="food-btn px-3 py-1 rounded">Cancel</button>
-            <button type="submit" disabled={isSubmitting} className="food-btn px-4 py-1 rounded" data-test-id="food-add-submit">
-              {isSubmitting ? (initialValues ? 'Updating Food...' : 'Adding Food...') : (initialValues ? 'Update' : 'Save')}
-            </button>
-          </div>
-        </form>
+            <div className="mt-4 flex items-center justify-center gap-3">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="food-btn px-18 py-3 text-sm rounded"
+                data-test-id="food-add-submit"
+              >
+                {isSubmitting
+                  ? initialValues
+                    ? "Updating Food..."
+                    : "Adding Food..."
+                  : initialValues
+                  ? "Update"
+                  : "Add"}
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="food-btn px-18 py-3 text-sm text-black border  border-orange-500 bg-transparent rounded"
+              >
+                Cancel
+              </button>
+              
+            </div>
+          </form>
+        </FormProvider>
       </div>
     </div>
   );

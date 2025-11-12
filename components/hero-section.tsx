@@ -33,7 +33,6 @@ export default function HomePage() {
   const limit = 8;
 
   useEffect(() => {
-    // initial load
     dispatch(fetchFoods({ limit, page: 1 }));
   }, [dispatch]);
 
@@ -87,32 +86,6 @@ export default function HomePage() {
 
   return (
     <main className="p-6 max-w-6xl mx-auto">
-      {/* <section className="mb-6">
-        <h2 className="text-3xl font-bold">Are you starving?</h2>
-        <div className="mt-4 flex gap-2">
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search food"
-            id="food-search"
-            className="food-input mr-2"
-          />
-          <button
-            onClick={handleSearch}
-            className="food-btn"
-            data-test-id="food-search-btn"
-          >
-            Search
-          </button>
-          <button
-            onClick={() => setAddOpen(true)}
-            className="food-btn ml-3"
-            data-test-id="food-add-btn"
-          >
-            Add Food
-          </button>
-        </div>
-      </section> */}
       <div className="container ">
         <h2 className="text-xl lg:text-2xl font-bold text-center pb-7 text-gray-900">
           Featured Meals
@@ -176,55 +149,6 @@ export default function HomePage() {
               </div>
             )}
           </>
-          // </div>
-
-          // {loading ? (
-          //   <p>Loading...</p>
-          // ) : error ? (
-          //   <p className="text-red-600">Error: {error}</p>
-          // ) : foods.length === 0 ? (
-          //   <div className="empty-state-message">No items available</div>
-          // ) : (
-          //   <>
-          //     <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          //       {foods.map((f) => (
-          //         <FoodCard
-          //           key={f.id}
-          //           food={{ ...f, price: f.price ?? 2.99 }}
-
-          //           onEdit={(food) => {
-          //             setSelected(food);
-          //             setEditOpen(true);
-          //           }}
-          //           onDelete={(id) => {
-          //             setSelected(foods.find((x) => x.id === id) ?? null);
-          //             setDeleteOpen(true);
-          //           }}
-          //         />
-          //       ))}
-          //     </section>
-          //     {hasMore && (
-          //       <div className="mt-6 text-center">
-          //         <button
-          //           onClick={() => {
-          //             const nextPage = currentPage + 1;
-          //             setCurrentPage(nextPage);
-          //             dispatch(
-          //               fetchFoods({ limit, page: nextPage, append: true })
-          //             ).then((result) => {
-          //               if (result.payload.data.length < limit) {
-          //                 setHasMore(false);
-          //               }
-          //             });
-          //           }}
-          //           className="food-btn"
-          //           disabled={loading}
-          //         >
-          //           {loading ? "Loading..." : "Read More"}
-          //         </button>
-          //       </div>
-          //     )}
-          //   </>
         )}
 
         <AddEditMealModal

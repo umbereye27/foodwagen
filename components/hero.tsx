@@ -31,13 +31,11 @@ export function HomePage() {
   return (
     <section className="relative bg-gradient-to-br from-orange-400 to-yellow-500 overflow-hidden  ">
       <div className="absolute inset-0 opacity-10">
-        {/* <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full -translate-x-32 -translate-y-32"></div> */}
-        {/* <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full translate-x-48 translate-y-48"></div> */}
+       
       </div>
 
       <div className="relative container mx-auto items-center px-4 py-16 lg:py-10 max-w-6xl ">
         <div className="grid lg:grid-cols-2 gap-8 items-center">
-          {/* Left Content */}
           <div className=" z-10">
             <div className="space-y-1">
               <h1 className="text-2xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight">
@@ -47,7 +45,6 @@ export function HomePage() {
                 Within a few clicks, find meals that are accessible near you
               </p>
             </div>
-            {/* Search Card */}
             <div className="bg-white rounded-xl shadow-xl py-4 px-10 space-y-6">
               <div className="flex gap-4 p-1 text-sm bg-gray-100 rounded-lg pb-2">
                 <button
@@ -98,7 +95,6 @@ export function HomePage() {
               </div>
             </div>
           </div>
-          {/* Right Image */}
           <div className="relative mt-20 bg-gradient-to-br from-gray-900 to-gray-800 rounded-full transform hover:scale-105 transition-transform duration-300 w-60 sm:w-50 md:w-66 lg:w-88 mx-auto">
             <div className="w-full aspect-square rounded-full overflow-hidden bg-gray-900">
               <img

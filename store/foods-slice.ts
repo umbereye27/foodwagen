@@ -1,10 +1,8 @@
-// src/store/foodsSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Food } from "../lib/types/food";
 
 const API_BASE = "https://6852821e0594059b23cdd834.mockapi.io";
 
-// Thunks
 export const fetchFoods = createAsyncThunk<
   { data: Food[]; append: boolean },
   { search?: string; page?: number; limit?: number; append?: boolean }
@@ -107,11 +105,9 @@ const foodsSlice = createSlice({
   name: "foods",
   initialState,
   reducers: {
-    // optional synchronous reducers if needed
   },
   extraReducers: (builder) => {
     builder
-      // fetchFoods
       .addCase(fetchFoods.pending, (state) => {
         state.loading = true;
         state.error = null;
